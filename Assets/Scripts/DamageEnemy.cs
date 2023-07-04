@@ -1,8 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 public class DamageEnemy : DamageBasic
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+	private DataEnemy dataEnemy;
+	private float probi;
+	private void Start()
+	{
+		probi = Random.value;
+		dataEnemy = (DataEnemy)data;
+		// print(dataEnemy.expProbability);
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.name.Contains("武器"))
         {
@@ -10,4 +21,15 @@ public class DamageEnemy : DamageBasic
             
         }
     }
+
+	protected override void Dead()
+	{
+		base.Dead();
+        Destroy(gameObject);
+
+		if (probi < dataEnemy.expProbability)
+		{
+			Instantiate(dataEnemy.prefabExp, transform.position, transform.rotation);
+		}
+	}
 }
